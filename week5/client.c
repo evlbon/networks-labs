@@ -35,10 +35,10 @@ void setup_tcp_communication() {
         scanf("%i", &student.age);
         printf("Enter group : \n");
         scanf("%s",student.group);
-        sent_recv_bytes = sendto(sockfd,&student,sizeof(struct student_t),0,
+        sent_recv_bytes = sendto(sockfd,&student,sizeof(struct student_t),MSG_CONFIRM,
                                  (struct sockaddr *)&dest,sizeof(struct sockaddr));
         printf("No of bytes sent = %zi\n", sent_recv_bytes);
-        sent_recv_bytes =  recvfrom(sockfd, (char *)&student, sizeof(struct student_t), 0,
+        sent_recv_bytes =  recvfrom(sockfd, (char *)&student, sizeof(struct student_t), MSG_WAITALL,
                                     (struct sockaddr *)&dest, (socklen_t *) &addr_len);
         printf("No of bytes received = %zi\n", sent_recv_bytes);
         printf("Student received:\n");
