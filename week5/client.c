@@ -17,16 +17,16 @@ struct student_t student;
 
 void setup_tcp_communication() {
     int sockfd = 0;
-    int sent_recv_bytes = 0;
+    ssize_t sent_recv_bytes = 0;
     int addr_len = 0;
     addr_len = sizeof(struct sockaddr);
     struct sockaddr_in dest;
+    memset(&dest,0, sizeof(dest));
     dest.sin_family = AF_INET;
     dest.sin_port = DEST_PORT;
-    struct hostent *host = (struct hostent *)gethostbyname(SERVER_IP_ADDRESS);
+    struct hostent *host = gethostbyname(SERVER_IP_ADDRESS);
     dest.sin_addr = *((struct in_addr *)host->h_addr);
-    sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    connect(sockfd, (struct sockaddr *)&dest,sizeof(struct sockaddr));
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     //press Ctrl+C to stop, that's easy
     while(1) {
         printf("Enter name : \n");
@@ -37,10 +37,10 @@ void setup_tcp_communication() {
         scanf("%s",student.group);
         sent_recv_bytes = sendto(sockfd,&student,sizeof(struct student_t),0,
                                  (struct sockaddr *)&dest,sizeof(struct sockaddr));
-        printf("No of bytes sent = %d\n", sent_recv_bytes);
+        printf("No of bytes sent = %zi\n", sent_recv_bytes);
         sent_recv_bytes =  recvfrom(sockfd, (char *)&student, sizeof(struct student_t), 0,
-                                    (struct sockaddr *)&dest, &addr_len);
-        printf("No of bytes received = %d\n", sent_recv_bytes);
+                                    (struct sockaddr *)&dest, (socklen_t *) &addr_len);
+        printf("No of bytes received = %zi\n", sent_recv_bytes);
         printf("Student received:\n");
         printf(" student.name  = %s\n",student.name);
         printf(" student.age   = %i\n",student.age);
