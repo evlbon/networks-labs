@@ -39,6 +39,10 @@ void *process_connection(void *data) {
         //change student...
         bzero(student.group, 16);
         strcpy(student.group, "Dropped");
+        //sleep
+        printf("Worker %i started hard work\n",worker_id);
+        sleep(10);
+        printf("Worker %i finished hard work\n",worker_id);
         //send him back
         sent_recv_bytes = sendto(sockfd, (char *) &student, sizeof(struct student_t), 0,
                                  (struct sockaddr *) &client_addr, addr_len);
